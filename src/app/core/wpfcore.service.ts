@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { nSQL } from "@nano-sql/core";
 
 
 @Injectable({
@@ -16,23 +17,66 @@ export class WpfcoreService {
     this.dbData = null;
   }
 
-  getDb() {
-    //http.get('/db.json').pipe(retry(3), catchError(this.handleError)).subscribe((data) => {
-    this.http.get('/db.json').subscribe((data) => {
-      console.log("data loaded,", data);
-      if(data) {
+  public getData() {
+    return this.dbData;
+  }
 
-        this.dbStatus = 1;
-        this.dbData = data;
-        return data;
+  //load the json data from server
+  load() {
+    return new Promise((resolve, reject) => {
+      this.http
+        .get('/db.json')
+        .subscribe(response => {
+          this.dbData = this.defaultTable(response);
+          this.dbStatus = 1;
+          resolve(true);
+      })
+    })
+  }
+
+  // Add default tables to json data
+  defaultTable(data){
+    if(!data) {
+      return false;
+    }
+    
+    var _defaultTables: string[] = ['options', 'posts', 'postmeta', 'terms', 'term_relationships', 'term_taxonomy', 'users', 'usermeta'];
+    for(let table in _defaultTables) {
+      if(!data.hasOwnProperty(_defaultTables[table])){
+        data[_defaultTables[table]] = [];
       }
-      return null; 
-    });    
+    }
+    return data;
   }
 
-  handleError(error: HttpErrorResponse) {
-    this.dbStatus = 0; 
+  getOption(option_id: number|string) {
+
   }
 
+  //Get complete menu tree
+  getMenu(menu_name: string) {
+
+  }
+
+  //Get term data
+  getTerm(term_id: number) {
+
+  }
+
+  //Get post data
+  getPost(post_id: number){
+
+  }
+  
+  //Get complete User data
+  getUser(user_id: number) {
+    if(this.dbData && this.dbData.users) {
+      nSQL(this.dbData.users).query("select").where(["ID", "=", user_id]).exec().then((row) => {
+        console.log("user filter row", row);
+        return row;
+      });
+    }
+    
+  }
 
 }
