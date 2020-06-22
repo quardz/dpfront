@@ -11,9 +11,12 @@ export class AppComponent {
   dbData: any;
   constructor(private wpcore: WpfcoreService) { 
     this.dbData = wpcore.getData();
-    //wpcore.getUser(1).then((content)=>{
-      console.log("Loading user 1", wpcore.getUser(1));
-    //});
+    var user = wpcore.getUser(1);
+    var nickname = wpcore.getMetadata('nickname', user);
+    console.log("Loading user 1", wpcore.getUser(1));
+    console.log("nickname", nickname);
+    console.log("admin color", wpcore.getMetadata("admin_color", user));
+
     
   }
 

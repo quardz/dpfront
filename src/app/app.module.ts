@@ -8,8 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { WpfcoreService } from './core/wpfcore.service';
 
-export function WpDBProvider(provider: WpfcoreService) {
-  return () => provider.load();
+export function WpDBProvider(wpcore: WpfcoreService) {
+  return () => wpcore.load();
 }
 
 
