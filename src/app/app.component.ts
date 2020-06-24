@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WpfcoreService } from './core/wpfcore.service';
+import { WpnavComponent } from './core/components/wpnav/wpnav.component';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +11,43 @@ export class AppComponent {
   title = 'dpfront';
   dbData: any;
   constructor(private wpcore: WpfcoreService) { 
+    
     this.dbData = wpcore.getData();
-    var user = wpcore.getUser(1);
-    var nickname = wpcore.getMetadata('nickname', user);
-    console.log("Loading user 1", wpcore.getUser(1));
-    console.log("nickname", nickname);
-    console.log("admin color", wpcore.getMetadata("admin_color", user));
 
+    var filters: Array<any>  = ["ID", "=", 9];
+    wpcore.loadEntity('posts', filters).then((rows)=>{ 
+      //console.log("loaded entity", rows);  
+    }); 
+    
+    wpcore.getRecentPosts().then((rows)=>{
+      //console.log("recent posts", rows);  
+    });
+    
+    wpcore.getPost(1).then((post:any)=>{
+      var d = new Date(post.post_date);
+      //console.log("get a posts", d, post.post_date);   
+    });
+
+     
+     
     
   }
+
+  ulclass = "thisistop";
+
+  items = [
+    {name: 'rroott',link: 'page1', children: [
+      {name: 'a', link: 'page1', children: []}, 
+      {name: 'b', link: 'page2', children: []},
+      {name: 'c', link: 'page1', children: [
+        {name: 'd', link: 'page2', children: []},
+        {name: 'e', link: 'page1', children: []},
+        {name: 'f', link: 'page2', children: []},
+       ]},
+      ]
+    }
+  ];  
+
 
   OnInit() {
     
