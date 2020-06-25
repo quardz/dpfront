@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import { WpfcoreService } from './core/wpfcore.service';
 import { WpnavComponent } from './core/components/wpnav/wpnav.component';
+import { WppageComponent } from './core/components/wppage/wppage.component';
+import { Page2Component } from './test/page2/page2.component'; 
 
 @Component({
   selector: 'app-root',
@@ -10,19 +14,33 @@ import { WpnavComponent } from './core/components/wpnav/wpnav.component';
 export class AppComponent {
   title = 'dpfront';
   dbData: any;
-  constructor(private wpcore: WpfcoreService) { 
+  constructor(
+      private wpcore: WpfcoreService,
+      private injector: Injector,
+
+    ) {  
     
     this.dbData = wpcore.getData();
+    var URLs: Array<any> = [];
+    URLs = wpcore.getURLs();
+    if(URLs) {
+      console.log("loaded urls ", URLs);
+      const router = this.injector.get(Router);
+      for(let _i in URLs) {
+        router.config.push({ path: URLs[_i].url, component: WppageComponent }); 
+      }
+    }
 
-    var filters: Array<any>  = ["ID", "=", 9];
-    wpcore.loadEntity('posts', filters).then((rows)=>{ 
-      //console.log("loaded entity", rows);  
-    }); 
-    
-    wpcore.getRecentPosts().then((rows)=>{
-      //console.log("recent posts", rows);  
+    /*
+
+    wpcore.getURLs().then((URLs)=>{
+      console.log("all urls in app comp", URLs);
+      
+      
     });
+    */
     
+
     wpcore.getPost(1).then((post:any)=>{
       var d = new Date(post.post_date);
       //console.log("get a posts", d, post.post_date);   

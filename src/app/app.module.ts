@@ -11,6 +11,7 @@ import { WpfcoreService } from './core/wpfcore.service';
 import { WpnavComponent } from './core/components/wpnav/wpnav.component';
 import { Page1Component } from './test/page1/page1.component';
 import { Page2Component } from './test/page2/page2.component';
+import { WppageComponent } from './core/components/wppage/wppage.component';
  
 export function WpDBProvider(wpcore: WpfcoreService) {
   return () => wpcore.load();
@@ -22,7 +23,8 @@ export function WpDBProvider(wpcore: WpfcoreService) {
     AppComponent,
     WpnavComponent,
     Page1Component,
-    Page2Component
+    Page2Component,
+    WppageComponent
   ],
   imports: [
     BrowserModule,

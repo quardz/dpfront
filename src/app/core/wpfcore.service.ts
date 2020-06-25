@@ -1,10 +1,9 @@
-import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { Injectable, Injector } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import * as _ from 'underscore';
 import { nSQL } from "@nano-sql/core";
-import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -17,16 +16,12 @@ export class WpfcoreService {
   
   constructor( 
     private http: HttpClient,   
-    private injector: Injector,
   ) { 
     this.dbStatus = 0;
     this.dbData = null;
   }
 
   public getData() {
-    console.log("displayung URLs in getdata()", this.URLs);
-    const router = this.injector.get(Router);
-    console.log("router", router);
 
     return this.dbData;
   }
@@ -85,6 +80,56 @@ export class WpfcoreService {
     return data;
   }
 
+  private attachTerms(data) {
+
+  }
+
+  private generatePostURLs(data:any, urlformat?:string){
+    urlformat = '/%monthnum%/%hour%/%minute%/%post_id%/%postname%/';
+
+    if(data && data.posts) {
+      for(let _i in data.posts) {
+
+        //Create the URL 
+        var tmp_date = new Date(data.posts[_i].post_date);
+        var _tokens = {
+          '%year%': tmp_date.getFullYear(),
+          '%monthnum%': ("0" + (tmp_date.getMonth() + 1)).slice(-2),
+          '%day%': ("0" + tmp_date.getDate()).slice(-2),
+          '%postname%': data.posts[_i].post_name,
+          '%post_id%': data.posts[_i].ID,
+          '%hour%': ("0" + tmp_date.getHours()).slice(-2),
+          '%minute%': ("0" + tmp_date.getMinutes()).slice(-2),
+          '%second%': ("0" + tmp_date.getSeconds()).slice(-2), 
+        };
+        var tmp_url = urlformat;
+        for(let _find in _tokens) {
+          tmp_url = tmp_url.split(_find).join(_tokens[_find]);
+        }
+        //add it to posts
+        data.posts[_i].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, '');
+        var _route = {
+          url: data.posts[_i].post_url,
+          component: "PostComponent",
+          id: data.posts[_i].ID
+        };
+        this.URLs.push(_route);
+
+
+        //Fix Terms
+        data.posts[_i]._tags = [];
+        if(data.term_relationships) {
+          for(let _r in data.term_relationships) {
+            if(data.term_relationships[_r].object_id == data.posts[_i].ID) {
+              data.posts[_i]._tags.push(data.term_relationships[_r].term_taxonomy_id);
+            }
+          }
+        } 
+      }
+      return data;
+    }
+  }
+
 
   getOption(option_id: number|string) { 
 
@@ -102,6 +147,22 @@ export class WpfcoreService {
       }
       else {
         entity.metatbl[meta_key]
+      }
+    } 
+    return false;
+  }
+
+  //Return current entity type, entity id and post types from the path.
+  getCurrentpageEntity(path: string = '') {
+    if(!path) {
+      path = window.location.pathname.replace(/^\/+/, '');;
+    }
+
+    if(this.URLs) {
+      for(let _i in this.URLs) {
+        if(this.URLs[_i].url == path) {
+          return this.URLs[_i];
+        }
       }
     }
     return false;
@@ -139,38 +200,6 @@ export class WpfcoreService {
     });
   }
 
-  generatePostURLs(data:any, urlformat?:string){
-    urlformat = '/%monthnum%/%hour%/%minute%/%post_id%/%postname%/';
-
-    if(data && data.posts) {
-      for(let _i in data.posts) {
-        var tmp_date = new Date(data.posts[_i].post_date);
-        var _tokens = {
-          '%year%': tmp_date.getFullYear(),
-          '%monthnum%': ("0" + (tmp_date.getMonth() + 1)).slice(-2),
-          '%day%': ("0" + tmp_date.getDate()).slice(-2),
-          '%postname%': data.posts[_i].post_name,
-          '%post_id%': data.posts[_i].ID,
-          '%hour%': ("0" + tmp_date.getHours()).slice(-2),
-          '%minute%': ("0" + tmp_date.getMinutes()).slice(-2),
-          '%second%': ("0" + tmp_date.getSeconds()).slice(-2), 
-        };
-        var tmp_url = urlformat;
-        for(let _find in _tokens) {
-          tmp_url = tmp_url.split(_find).join(_tokens[_find]);
-        }
-        //add it to posts
-        data.posts[_i].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, '');
-        var _route = {
-          url: data.posts[_i].post_url,
-          component: "PostComponent",
-          id: data.posts[_i].ID
-        };
-        this.URLs.push(_route);
-      }
-      return data;
-    }
-  }
 
   //load entities by filters and return order by 
   loadEntity(entity_type: string, filters?: any, orderBy?: any, limit?: number){
