@@ -24,7 +24,6 @@ export class AppComponent {
     var URLs: Array<any> = [];
     URLs = wpcore.getURLs();
     if(URLs) {
-      console.log("loaded urls ", URLs);
       const router = this.injector.get(Router);
       for(let _i in URLs) {
         router.config.push({ path: URLs[_i].url, component: WppageComponent }); 
@@ -40,6 +39,7 @@ export class AppComponent {
     });
     */
     
+    //console.log("term Parents for 100", wpcore.getTermParents(100));
 
     wpcore.getPost(1).then((post:any)=>{
       var d = new Date(post.post_date);
