@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { WpfcoreService } from './core/wpfcore.service';
 import { WpnavComponent } from './core/components/wpnav/wpnav.component';
 import { WppageComponent } from './core/components/wppage/wppage.component';
+import { WpcategoryComponent } from './core/components/wpcategory/wpcategory.component';
 import { Page2Component } from './test/page2/page2.component'; 
 
 @Component({

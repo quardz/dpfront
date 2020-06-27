@@ -52,38 +52,38 @@ export class WpfcoreService {
     var _metatables = ['users', 'posts', 'terms'];
 
     var _term_urls = {};
+
+    //Generate URL for terms
+    if(data.terms) {
+      for(let _t in data.terms) {
+        var _path = '';
+        if(data.terms[_t][6] == 'category' || data.terms[_t][6] == 'post_tag') {
+          if(data.terms[_t][8]) {
+            for(let _pid in data.terms[_t][10]) {
+              _path =  data.terms[data.terms[_t][10][_pid]][2] + "/" + _path;
+            }
+          }
+          _path = data.terms[_t][6] + "/" + _path  + data.terms[_t][2];          
+        }
+        data.terms[_t][11] = _path.replace(/\/$/, "").replace(/^\/+/, '');
+        var _route = {
+          url: data.terms[_t][11],
+          component: "TermComponent",
+          id: data.terms[_t][0],
+          entity: 'term',
+        };
+        this.URLs.push(_route);   
+        _term_urls[_route.id] = _route.url;
+      }
+      data.terms._describe[11] = "url";
+    }
+    //END : URL for terms
     
     for(let table in data) {
       //skip options table
       if(table == "options") {
         continue;
       }
-
-      //Generate URL for terms
-      if(table == "terms") {
-        for(let _t in data[table]) {
-          var _path = '';
-          if(data[table][_t][6] == 'category' || data[table][_t][6] == 'post_tag') {
-            if(data[table][_t][8]) {
-              for(let _pid in data[table][_t][10]) {
-                _path =  data[table][data[table][_t][10][_pid]][2] + "/" + _path;
-              }
-            }
-            _path = data[table][_t][6] + "/" + _path  + data[table][_t][2];          
-          }
-          data[table][_t][11] = _path.replace(/\/$/, "").replace(/^\/+/, '');
-          var _route = {
-            url: data[table][_t][11],
-            component: "TermComponent",
-            id: data[table][_t][0],
-            entity: 'term',
-          };
-          this.URLs.push(_route);   
-          _term_urls[_route.id] = _route.url;
-        }
-        data[table]._describe[11] = "url";
-      }
-      //END : URL for terms
 
       //Make the array with proper key value
       var keys = data[table]['_describe'];
@@ -108,11 +108,11 @@ export class WpfcoreService {
 
       //Generate URL for posts
       if(table == 'posts') {
-        var urlformat = '/%monthnum%/%hour%/%minute%/%post_id%/%postname%/%author%/%category%/';
+        var urlformat = '?p=/%post_id%';
         var default_category = 1;
         if(data.options){
           if(data.options.permalink_structure){
-            //urlformat = data.options.permalink_structure;
+            urlformat = data.options.permalink_structure;
           }      
           if(data.options.default_category) {
             default_category = data.options.default_category;
@@ -121,7 +121,7 @@ export class WpfcoreService {
 
 
 
-        for(let _p in data.posts) {
+        for(let _p in data.posts) { 
 
           // Attach terms to posts
           data.posts[_p]._tags = [];
@@ -158,19 +158,16 @@ export class WpfcoreService {
             '%hour%': ("0" + tmp_date.getHours()).slice(-2),
             '%minute%': ("0" + tmp_date.getMinutes()).slice(-2),
             '%second%': ("0" + tmp_date.getSeconds()).slice(-2), 
-            '%category%': _term_urls[_main_category], 
+            '%category%': _term_urls[_main_category].replace("category", ""), 
             '%author%': author, 
           };  
-
-          console.log("this is to test url",_term_urls, _term_urls[_main_category], _main_category, data.posts[_p].ID );
-
-          //console.log("category for ", data.posts[_p].ID, _main_category, _term_urls[_main_category]);
       
           var tmp_url = urlformat;
           for(let _find in _tokens) {
             tmp_url = tmp_url.split(_find).join(_tokens[_find]);
           }      
-          data.posts[_p].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, '');
+          data.posts[_p].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, '').replace("//", "/");
+
           var _route = {
             url: data.posts[_p].post_url,
             component: "PostComponent",
@@ -185,8 +182,6 @@ export class WpfcoreService {
       
     }
     
-    console.log("_term_urls", _term_urls);
-
     var _defaultTables: string[] = ['options', 'posts', 'terms', 'term_relationships', 'users'];
     for(let table in _defaultTables) {
       if(!data.hasOwnProperty(_defaultTables[table])){
@@ -358,6 +353,39 @@ export class WpfcoreService {
       
     });
   }
+
+  getCategory(taxanomy: string = 'category') {
+    var output = [];
+    for(let _t in this.dbData.terms) {
+      if(this.dbData.terms[_t].taxonomy == taxanomy && this.dbData.terms[_t].term_id > 1 ) {
+        output.push(this.dbData.terms[_t]);
+      }
+    }
+    return output;
+  }
+
+  getCategory1(taxanomy: string = 'category', limit: number = 0) {
+    var orderBy: Array<any> = ['count DESC'];
+    var filters: Array<any> = [
+      ["taxonomy","=",taxanomy],
+      "AND",
+      ["term_id",">",1],
+    ];
+
+    var nsql = nSQL().query("select").from(this.dbData.terms).where(filters);
+    if(orderBy) {
+      nsql.orderBy(orderBy); 
+    }
+    if(limit) {
+      nsql.limit(limit).offset(0); 
+    }
+    return nsql.exec()
+      .then((rows)=>{
+        return rows;
+    }).catch((error) => {
+      
+    });           
+  }  
 
   //Get term data
   getTerm(term_id: number) {
