@@ -19,17 +19,14 @@ export class WppageComponent implements OnInit {
     
     var currentPage: any;
     currentPage = wpcore.getCurrentpageEntity();
+    console.log("getCurrentpageEntity", currentPage);
     if(currentPage) {
       this.entity_id = currentPage.id;
       wpcore.getPost(this.entity_id).then((post)=>{ 
         this.post = post;
         console.log("current ENtity", post);  
       })
-      
-    }
-
-      console.log("current path system", wpcore.getCurrentpageEntity());
-    
+    }    
 
   }
 

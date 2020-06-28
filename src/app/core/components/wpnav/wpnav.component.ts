@@ -9,7 +9,10 @@ import { RouterModule, Routes,ActivatedRoute, Router } from '@angular/router';
 export class WpnavComponent {
 
   @Input() node;
-  @Input() ulClass: string;
+  @Input() ulclass: string;
+  @Input() liclass: string;
+  @Input() l1ulclass: string;
+  @Input() l1liclass: string;
 
   constructor(route:ActivatedRoute, router:Router) { }
 

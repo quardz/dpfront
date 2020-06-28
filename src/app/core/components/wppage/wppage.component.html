@@ -1,6 +1,11 @@
-<p>wppage works!</p>
 
-<h2>this is content</h2>
-{{ post | json }}
+<h1 class = "page-title">{{ post.post_title }}</h1>
+<div class = "page-content" [innerHTML] = "post.post_content"></div>
+<div class = "page-metadata" *ngIf = "post.post_type==='post'">
+  This entry was posted in palladam, place, putharachal and tagged tag1, tag3 on June 24, 2020.
+</div>
+<div class = "row">
+<pre>{{ post | json }}</pre>
+</div>
 
 

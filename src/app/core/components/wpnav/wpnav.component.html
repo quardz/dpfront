@@ -1,6 +1,7 @@
-<ul [ngClass]="ulClass">
-  <li *ngFor="let item of node" [ngClass]="item.liClass">
-    <a [routerLink]="item.link" [routerLinkActive]="'is-active'" [ngClass]="item.linkClass">{{ item.name }}</a>
-    <app-wpnav *ngIf="item.children" [node]="item.children" [ulClass] = "item.ulClass"></app-wpnav>
-  </li>
+<ul [ngClass]="ulclass">
+
+  <li *ngFor="let item of node"   [ngClass]="[liclass ? liclass : 'nav-item', item.children ? 'dropdown' : '']">
+    <a [routerLink]="item.link" [routerLinkActive]="'active'" class = "nav-link" [ngClass] = "[item.children ? 'dropdown-toggle' : '']">{{ item.name }}</a>
+    <app-wpnav *ngIf="item.children" [node]="item.children" ulclass = "dropdown-menu" liclass = "dropdown-item"></app-wpnav>
+  </li> 
 </ul>

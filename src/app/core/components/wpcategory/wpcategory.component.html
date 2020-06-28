@@ -1,15 +1,15 @@
 <ng-container *ngIf="categories">
-  <ng-container *ngIf="title"><h3>{{ title }}</h3></ng-container>
-  <ul>
+  <ng-container *ngIf="title"><h3 [ngClass] = "titleclass">{{ title }}</h3></ng-container>
+  <ul [ngClass] = "ulClass">
     <ng-template ngFor let-item [ngForOf]="categories" >
       <ng-container *ngIf="item.count">
-      <li>
+      <li [ngClass] = "liClass">
       <a [routerLink]="item.url" [routerLinkActive]="'is-active'" [ngClass]="item.linkClass">
         {{ item.name }} <ng-container *ngIf="showcount"> ({{ item.count }})</ng-container>
       </a>
       </li>
       </ng-container>
-    </ng-template>
+    </ng-template> 
   </ul>
 </ng-container>
 

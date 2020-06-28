@@ -13,6 +13,7 @@ import { Page1Component } from './test/page1/page1.component';
 import { Page2Component } from './test/page2/page2.component';
 import { WppageComponent } from './core/components/wppage/wppage.component';
 import { WpcategoryComponent } from './core/components/wpcategory/wpcategory.component';
+import { TwentytwelveComponent } from './core/themes/twentytwelve/twentytwelve.component';
  
 export function WpDBProvider(wpcore: WpfcoreService) {
   return () => wpcore.load();
@@ -26,7 +27,8 @@ export function WpDBProvider(wpcore: WpfcoreService) {
     Page1Component,
     Page2Component,
     WppageComponent,
-    WpcategoryComponent
+    WpcategoryComponent,
+    TwentytwelveComponent
   ],
   imports: [
     BrowserModule,
