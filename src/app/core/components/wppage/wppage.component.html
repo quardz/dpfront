@@ -1,11 +1,19 @@
+<ng-container *ngIf="entity_type === 'posts'">
+<wppost [entity_id] = "content.ID" link_title = "false"></wppost>
+</ng-container>
 
-<h1 class = "page-title">{{ post.post_title }}</h1>
-<div class = "page-content" [innerHTML] = "post.post_content"></div>
-<div class = "page-metadata" *ngIf = "post.post_type==='post'">
-  This entry was posted in palladam, place, putharachal and tagged tag1, tag3 on June 24, 2020.
+<ng-container *ngIf="entity_type === 'posts'">
+
+</ng-container>  
+
+
+<ng-container *ngIf="entity_type === 'terms'">
+<div class = "terms-page termid-{{content.term_id}} termtax-{{content.taxonomy}}">
+<h1 class = "archive-title">{{ content.name }}</h1>
+<ng-container *ngIf="content.posts">
+  <ng-container *ngFor="let entity_id of content.posts">
+    <wppost [entity_id] = "entity_id" link_title = "1"></wppost>
+  </ng-container>
+</ng-container>
 </div>
-<div class = "row">
-<pre>{{ post | json }}</pre>
-</div>
-
-
+</ng-container>

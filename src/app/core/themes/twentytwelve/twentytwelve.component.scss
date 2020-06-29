@@ -21,9 +21,15 @@
 .site-header {
   padding: 1.714285714rem 0;
   h1 {
-    font-size: 1.857142857rem;
-    line-height: 1.846153846;
-    margin-bottom: 0;    
+    a{
+      font-size: 1.857142857rem;
+      line-height: 1.846153846;
+      margin-bottom: 0;    
+      color: #747474;
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
   h2 {
     font-weight: normal;
@@ -72,6 +78,23 @@
     line-height: 2;    
   }
 
+}
+
+:host ::ng-deep .archive-title {
+  font-size: 18px;
+  margin-bottom: 60px;  
+}
+
+:host ::ng-deep .terms-page {
+  wppost {
+    display: block;
+    margin-bottom: 60px;
+    .page-title {
+      outline: none;
+      color: #21759b;
+      font-size: 20px;
+    }
+  }
 }
 
 :host ::ng-deep .col-sidebar {

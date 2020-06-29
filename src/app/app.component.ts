@@ -43,10 +43,6 @@ export class AppComponent {
     
     //console.log("term Parents for 100", wpcore.getTermParents(100));
 
-    wpcore.getPost(1).then((post:any)=>{
-      var d = new Date(post.post_date);
-      //console.log("get a posts", d, post.post_date);   
-    });
 
      
      

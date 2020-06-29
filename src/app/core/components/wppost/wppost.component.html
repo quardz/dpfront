@@ -1,0 +1,16 @@
+<ng-container *ngIf="content">
+<div class = "post posttype-{{content.post_type}} postid-{{content.ID}}">
+<h1 class = "page-title" *ngIf = "link_title === '1'; else titlewithoutlink">
+  <a [routerLink] = "'/' + content.post_url">{{ content.post_title }}</a>
+</h1>
+<ng-template #titlewithoutlink>
+  <h1 class = "page-title">
+    {{ content.post_title }}
+  </h1>
+</ng-template>
+<div class = "page-content" [innerHTML] = "content.post_content"></div>
+<div class = "page-metadata" *ngIf = "content.post_type==='post'">
+    This entry was posted in palladam, place, putharachal and tagged tag1, tag3 on June 24, 2020.
+</div>
+</div>
+</ng-container>

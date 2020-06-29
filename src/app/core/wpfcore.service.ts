@@ -13,18 +13,23 @@ export class WpfcoreService {
   dbStatus: number;
   dbData: any;
   URLs: Array<any> = []; //link, component, entity = posts/users, type = post/page, parameters as obj
+  mapIndex_Pk: Array<any> = []; // It contains the map between primary key and index
   
   constructor(private http: HttpClient) { 
     this.dbStatus = 0;
     this.dbData = null;
   }
 
-  public getData() {
+  public getData() {  
     return this.dbData;
   }
 
   public getURLs() {
     return this.URLs;
+  }
+
+  public getMapIndex_Pk() {
+    return this.mapIndex_Pk;
   }
 
   //load the json data from server
@@ -33,6 +38,7 @@ export class WpfcoreService {
       this.http
         .get('/db.json')
         .subscribe(response => {
+
           this.dbData = this.fixData(response);
           console.log("after loading and fixing", this.dbData);
           this.dbStatus = 1;
@@ -53,6 +59,14 @@ export class WpfcoreService {
 
     var _term_urls = {};
 
+    var tablePKs = {
+      'users': 'ID',
+      'posts': 'ID',
+      'terms': 'term_id',
+    }
+
+    var _post_types_to_display = ['page', 'post'];
+
     //Generate URL for terms
     if(data.terms) {
       for(let _t in data.terms) {
@@ -65,29 +79,39 @@ export class WpfcoreService {
           }
           _path = data.terms[_t][6] + "/" + _path  + data.terms[_t][2];          
         }
-        data.terms[_t][11] = _path.replace(/\/$/, "").replace(/^\/+/, '');
+        data.terms[_t][12] = _path.replace(/\/$/, "").replace(/^\/+/, '');
+        //data.terms[_t][12] = "/" +  _path
         var _route = {
-          url: data.terms[_t][11],
+          url: data.terms[_t][12], 
           component: "TermComponent",
           id: data.terms[_t][0],
-          entity: 'term',
+          entity: 'terms',
         };
         this.URLs.push(_route);   
         _term_urls[_route.id] = _route.url;
       }
-      data.terms._describe[11] = "url";
+      data.terms._describe[12] = "url";
     }
     //END : URL for terms
+
+    //Contents belongs to terms
     
     for(let table in data) {
       //skip options table
       if(table == "options") {
         continue;
       }
+      
+      var mapIndex_Pk_key = tablePKs[table] ? tablePKs[table] : 0;
+      if(mapIndex_Pk_key) {
+        this.mapIndex_Pk[table] = {};  
+      }
+      
 
       //Make the array with proper key value
       var keys = data[table]['_describe'];
       var table_data_new = [];      
+      var _row_counter = 0;
       for(let row_id in data[table]) {
         if(row_id != '_describe') {
           var _tmp_row = {};  
@@ -97,9 +121,17 @@ export class WpfcoreService {
           if(_metatables.includes(table)) {
             _tmp_row['metatbl'] = data[table][row_id]['metatbl'];  
           }
+          //Map Key to index
+          if(mapIndex_Pk_key) {
+            this.mapIndex_Pk[table][_tmp_row[mapIndex_Pk_key]] = _row_counter; 
+          }
           
+
           //data[table][row_id] = _tmp_row; //uncomment this to make rows group with ID
           table_data_new.push(_tmp_row);
+          _row_counter++;
+
+
         }
       }
       data[table] = table_data_new;
@@ -122,6 +154,8 @@ export class WpfcoreService {
 
 
         for(let _p in data.posts) { 
+
+
 
           // Attach terms to posts
           data.posts[_p]._tags = [];
@@ -166,7 +200,8 @@ export class WpfcoreService {
           for(let _find in _tokens) {
             tmp_url = tmp_url.split(_find).join(_tokens[_find]);
           }      
-          data.posts[_p].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, '').replace("//", "/");
+          data.posts[_p].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, "").replace("//", "/");
+          //data.posts[_p].post_url = "/" + tmp_url.replace("//", "/");
 
           var _route = {
             url: data.posts[_p].post_url,
@@ -180,7 +215,12 @@ export class WpfcoreService {
 
 
       
-    }
+    } // END of for loop on each tables 
+
+
+
+
+    //End : content per terms
     
     var _defaultTables: string[] = ['options', 'posts', 'terms', 'term_relationships', 'users'];
     for(let table in _defaultTables) {
@@ -193,6 +233,10 @@ export class WpfcoreService {
     //data = this.fixPostURLsandTerms(data);
 
     return data;
+  }
+
+  generateArchives() { 
+    var archives = {};
   }
 
 
@@ -357,35 +401,12 @@ export class WpfcoreService {
   getCategory(taxanomy: string = 'category') {
     var output = [];
     for(let _t in this.dbData.terms) {
-      if(this.dbData.terms[_t].taxonomy == taxanomy && this.dbData.terms[_t].term_id > 1 ) {
+      if(this.dbData.terms[_t].taxonomy == taxanomy) {
         output.push(this.dbData.terms[_t]);
       }
     }
     return output;
   }
-
-  getCategory1(taxanomy: string = 'category', limit: number = 0) {
-    var orderBy: Array<any> = ['count DESC'];
-    var filters: Array<any> = [
-      ["taxonomy","=",taxanomy],
-      "AND",
-      ["term_id",">",1],
-    ];
-
-    var nsql = nSQL().query("select").from(this.dbData.terms).where(filters);
-    if(orderBy) {
-      nsql.orderBy(orderBy); 
-    }
-    if(limit) {
-      nsql.limit(limit).offset(0); 
-    }
-    return nsql.exec()
-      .then((rows)=>{
-        return rows;
-    }).catch((error) => {
-      
-    });           
-  }  
 
   //Get term data
   getTerm(term_id: number) {
@@ -394,9 +415,7 @@ export class WpfcoreService {
 
   //Get post data
   getPost(post_id: number){
-    return this.getEntityByID('posts', post_id).then((row)=>{
-      return row;
-    });
+    return this.getEntityByID('posts', post_id);
   }
 
 
@@ -408,7 +427,7 @@ export class WpfcoreService {
     }
     if(limit) {
       nsql.limit(limit).offset(0);
-    }
+    } 
     return nsql.exec()
       .then((rows)=>{
         return rows;
@@ -417,18 +436,12 @@ export class WpfcoreService {
     });        
   }
 
-  getEntityByID(entity_type: string, entity_id: number, entity_id_key: string = 'ID') {
-    var filters: Array<any> = [
-      [entity_id_key,"=",entity_id]
-    ];
-    return this.loadEntity(entity_type, filters).then((rows)=>{
-      if(rows && rows[0]) {
-        return rows[0];
-      }
-      return false;
-    }).catch((error) => {
-      
-    });
+  getEntityByID(entity_type: string, entity_id: number) {
+    if(this.mapIndex_Pk[entity_type][entity_id] !== undefined) { 
+      let _index = this.mapIndex_Pk[entity_type][entity_id]
+      return this.dbData[entity_type][_index];
+    }
+    return false;
   }
   
   //Get complete User data
