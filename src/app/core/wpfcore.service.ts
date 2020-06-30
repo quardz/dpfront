@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import * as _ from 'underscore';
 import { nSQL } from "@nano-sql/core";
+import * as JsSearch from 'js-search';
 
 
 @Injectable({
@@ -14,7 +15,8 @@ export class WpfcoreService {
   dbData: any;
   URLs: Array<any> = []; //link, component, entity = posts/users, type = post/page, parameters as obj
   mapIndex_Pk: Array<any> = []; // It contains the map between primary key and index
-  
+  archives: Array<any> = [];
+
   constructor(private http: HttpClient) { 
     this.dbStatus = 0;
     this.dbData = null;
@@ -30,6 +32,10 @@ export class WpfcoreService {
 
   public getMapIndex_Pk() {
     return this.mapIndex_Pk;
+  }
+
+  public getArchives() {
+    return this.archives;
   }
 
   //load the json data from server
@@ -183,9 +189,12 @@ export class WpfcoreService {
             }
           }
 
+          var _post_month = tmp_date.getMonth();
+          var _post_year = tmp_date.getFullYear();
+
           var _tokens = {
-            '%year%': tmp_date.getFullYear(),
-            '%monthnum%': ("0" + (tmp_date.getMonth() + 1)).slice(-2),
+            '%year%': _post_year,
+            '%monthnum%': ("0" + (_post_month + 1)).slice(-2),
             '%day%': ("0" + tmp_date.getDate()).slice(-2),
             '%postname%': data.posts[_p].post_name,
             '%post_id%': data.posts[_p].ID,
@@ -203,6 +212,10 @@ export class WpfcoreService {
           data.posts[_p].post_url = tmp_url.replace(/\/$/, "").replace(/^\/+/, "").replace("//", "/");
           //data.posts[_p].post_url = "/" + tmp_url.replace("//", "/");
 
+          // for pages, just use slug
+          if(data.posts[_p].post_type == 'page') {
+            data.posts[_p].post_url = data.posts[_p].post_name; 
+          }
           var _route = {
             url: data.posts[_p].post_url,
             component: "PostComponent",
@@ -210,6 +223,23 @@ export class WpfcoreService {
             entity: 'posts',
           };
           this.URLs.push(_route);
+
+          //Create Archive list
+          if(data.posts[_p].post_status == "publish" && data.posts[_p].post_type == 'post') {
+            if(_post_year in this.archives) {
+              if(_post_month in this.archives[_post_year]) {
+                this.archives[_post_year][_post_month].push(data.posts[_p].ID);
+              }
+              else {
+                this.archives[_post_year][_post_month] = [data.posts[_p].ID];
+              }
+            } 
+            else {
+              this.archives[_post_year] = [];
+            }
+          }
+
+
         }//END for posts   
       }
 
@@ -231,6 +261,15 @@ export class WpfcoreService {
 
     //Generate URLs for contents
     //data = this.fixPostURLsandTerms(data);
+
+    //Push other URLs 
+    var _search_url = {
+      url: 'search/:key', 
+      component: "WppageComponent",
+      id: 0,
+      entity: 'search',
+    };
+    this.URLs.push(_search_url); 
 
     return data;
   }
@@ -418,6 +457,17 @@ export class WpfcoreService {
     return this.getEntityByID('posts', post_id);
   }
 
+  searchPosts(keyword: string) {
+    var resu = null;
+    var search = new JsSearch.Search('post_content');
+    search.addIndex('post_content');
+    search.addIndex('post_title');
+    search.addIndex('post_url');
+
+    search.addDocuments(this.dbData.posts);   
+
+    return search.search(keyword);      
+  } 
 
   //load entities by filters and return order by 
   loadEntity(entity_type: string, filters?: any, orderBy?: any, limit?: number){

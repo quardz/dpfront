@@ -66,6 +66,11 @@
       white-space: nowrap;      
     }
   }
+  li:first-child {
+    a {
+      padding-left: 0px;
+    }
+  }
 }
 
 :host ::ng-deep .content-wrapper {
@@ -82,7 +87,7 @@
 
 :host ::ng-deep .archive-title {
   font-size: 18px;
-  margin-bottom: 60px;  
+  margin-bottom: 45px;  
 }
 
 :host ::ng-deep .terms-page {
@@ -96,6 +101,15 @@
     }
   }
 }
+:host ::ng-deep {
+  .page-metadata {
+    font-size: 13px;
+    font-style: italic; 
+    color: #757575;
+  }
+
+}
+
 
 :host ::ng-deep .col-sidebar {
   color: #6a6a6a;

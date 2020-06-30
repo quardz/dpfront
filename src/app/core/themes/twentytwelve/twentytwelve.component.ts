@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { WpfcoreService } from '../../wpfcore.service';
 import { WpnavComponent } from '../../components/wpnav/wpnav.component';
 import { WppageComponent } from '../../components/wppage/wppage.component';
@@ -14,7 +13,7 @@ export class TwentytwelveComponent implements OnInit {
 
   dbData: any;
 
-  constructor(private wpcore: WpfcoreService) { 
+  constructor(private wpcore: WpfcoreService) {  
     this.dbData = wpcore.getData();
 
   }
@@ -22,19 +21,26 @@ export class TwentytwelveComponent implements OnInit {
   
 
   ngOnInit(): void {
+
+
   }
 
   items = [
-      {name: 'Home', link: 'page1'}, 
-      {name: 'Services', link: 'page2'},
-      {name: 'Products', link: 'page1', children: [
-        {name: 'Mail service', link: 'page2'},
-        {name: 'Hosting', link: 'page1'},
-        {name: 'Video processing', link: 'page2'},
+      {name: 'Home', link: '/home-page'}, 
+      {name: 'Events', link: 'category/events'},
+
+      {name: 'About', link: 'about-coin-blog'},
+      {name: 'Careers', link: 'careers'},
+      {name: 'Top 5', link: 'post_tag/bitcoin', children: [
+        {name: 'Bitcoin', link: 'post_tag/bitcoin'},
+        {name: 'Ethereum', link: 'post_tag/ethereum'},
+        {name: 'DeFi', link: 'post_tag/defi'},
+        {name: 'Tezos', link: 'post_tag/tezos'},
+        {name: 'Cosmos', link: 'post_tag/cosmos'},
        ]
       },
-      {name: 'About us', link: 'page2'},
-      {name: 'Contact', link: 'page2'},
+      {name: 'Contact', link: 'contact'},
+      {name: 'Goto Google', link: 'https://google.com', ext: true},
   ];  
 
 }

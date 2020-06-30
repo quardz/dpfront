@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { WpfcoreService } from '../../wpfcore.service';
-
+import { Excerpt } from '../../excerpt.filter.pipe';
 
 @Component({
   selector: 'wppost',
@@ -13,9 +13,11 @@ export class WppostComponent implements OnInit {
   pkindex: any;
   data: any;
 
+
   @Input() footer: boolean = true;
   @Input() link_title: string = "0";
   @Input() entity_id: number;
+  @Input() excerpt: string = '';
   constructor(private wpcore: WpfcoreService) {
     
     
@@ -24,8 +26,6 @@ export class WppostComponent implements OnInit {
  
   ngOnInit(): void {
     this.content = this.wpcore.getEntityByID("posts", this.entity_id);
-    console.log("WppostComponent constructor entity id ", this.entity_id);
-    console.log("link totle", this.link_title);
   }
 
 }

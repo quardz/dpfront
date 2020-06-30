@@ -17,36 +17,56 @@ export class WppageComponent implements OnInit {
   currentPage: any;
   mapIndex_Pk: Array<any> = [];
   entity: any;
+  issearchpage: boolean = false;
+  searchkey: string;
+  paramSub: any;
 
-  constructor(private wpcore: WpfcoreService) { 
-
-    
-    console.log("Map PK", wpcore.getMapIndex_Pk());
- 
-    this.currentPage = wpcore.getCurrentpageEntity();
-    console.log("getCurrentpageEntity", this.currentPage);
+  constructor(private wpcore: WpfcoreService, private route: ActivatedRoute, private router: Router ,location: Location) { 
 
     this.mapIndex_Pk = wpcore.getMapIndex_Pk();
+ 
+    this.currentPage = wpcore.getCurrentpageEntity();
 
+ 
+    if(!this.currentPage) {
+      const key: string = this.route.snapshot.params.key;
+      if(this.router.url === ('/search/' + key)) {
+        this.issearchpage = true;
+        this.entity_type = 'search';
+        this.searchkey = key;
+        this.content = wpcore.searchPosts(key);
+      }
+    }
+
+    
+    //For terms and post pages
     if(this.currentPage) {
       this.entity_id = this.currentPage.id;
       this.entity_type = this.currentPage.entity;
       //Load Post page
       if(this.entity_type == 'posts') {
         this.content = wpcore.getPost(this.entity_id);
-        console.log("current post", this.content);  
       }
       //Load term page
       if(this.entity_type == 'terms') {
         this.content = wpcore.getTerm(this.entity_id);
-        console.log("current term", this.content);  
       }
-
     }    
 
+    //for Search pages
+
+
+  }
+  ngOnInit(): void {
+    //this.paramSub = this.route.params.subscribe((params) => {
+    //  console.log("in wppage oninit", params);
+    //});
+  }
+ 
+  ngOnDestroy(){
+    //console.log('ngOnDestroy');
+    //this.paramSub.unsubscribe();
   }
 
-  ngOnInit(): void {
-  } 
 
 }

@@ -12,8 +12,22 @@
 <h1 class = "archive-title">{{ content.name }}</h1>
 <ng-container *ngIf="content.posts">
   <ng-container *ngFor="let entity_id of content.posts">
-    <wppost [entity_id] = "entity_id" link_title = "1"></wppost>
+    <wppost [entity_id] = "entity_id" link_title = "1" excerpt = "yes"></wppost>
   </ng-container>
 </ng-container>
+</div>
+</ng-container>
+
+<ng-container *ngIf="entity_type === 'search'">
+<div class = "search-page terms-page">
+<h1 class = "archive-title">Search for <i>"{{ searchkey }}"</i> got {{content?.length}} result(s).</h1>
+<ng-container *ngIf="content">
+  <ng-container *ngFor="let post of content">
+    <ng-container *ngIf = "(post.post_type == 'post' || post.post_type == 'page')">
+      <wppost [entity_id] = "post.ID" link_title = "1" excerpt = "yes"></wppost>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
 </div>
 </ng-container>

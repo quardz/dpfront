@@ -5,7 +5,7 @@ import { Page1Component } from './test/page1/page1.component';
 import { Page2Component } from './test/page2/page2.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/page1', pathMatch: 'full' },
+  { path: '', redirectTo: '/home-page', pathMatch: 'full' },
 
   { path: 'page1', component: Page1Component },
   { path: 'page2', component: Page2Component },

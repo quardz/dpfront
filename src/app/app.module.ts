@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import {FormsModule} from '@angular/forms';
 
 
 import { WpfcoreService } from './core/wpfcore.service';
@@ -15,6 +16,8 @@ import { WppageComponent } from './core/components/wppage/wppage.component';
 import { WpcategoryComponent } from './core/components/wpcategory/wpcategory.component';
 import { TwentytwelveComponent } from './core/themes/twentytwelve/twentytwelve.component';
 import { WppostComponent } from './core/components/wppost/wppost.component';
+import { WpsearchboxComponent } from './core/components/wpsearchbox/wpsearchbox.component';
+import { Excerpt } from './core/excerpt.filter.pipe';
  
 export function WpDBProvider(wpcore: WpfcoreService) {
   return () => wpcore.load();
@@ -30,11 +33,14 @@ export function WpDBProvider(wpcore: WpfcoreService) {
     WppageComponent,
     WpcategoryComponent,
     TwentytwelveComponent,
-    WppostComponent
+    WppostComponent,
+    WpsearchboxComponent,
+    Excerpt
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule,
     RouterModule.forRoot([]),
 

@@ -5,6 +5,7 @@ import { WpfcoreService } from './core/wpfcore.service';
 import { WpnavComponent } from './core/components/wpnav/wpnav.component';
 import { WppageComponent } from './core/components/wppage/wppage.component';
 import { WpcategoryComponent } from './core/components/wpcategory/wpcategory.component';
+import { WpsearchboxComponent } from './core/components/wpsearchbox/wpsearchbox.component';
 import { TwentytwelveComponent } from './core/themes/twentytwelve/twentytwelve.component';
 import { Page2Component } from './test/page2/page2.component'; 
 
@@ -14,7 +15,7 @@ import { Page2Component } from './test/page2/page2.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'dpfront';
+  title = 'Coin Blog';
   dbData: any;
   constructor(
       private wpcore: WpfcoreService,
@@ -24,50 +25,23 @@ export class AppComponent {
     
     this.dbData = wpcore.getData();
     var URLs: Array<any> = [];
+    //Search page
+    
+
     URLs = wpcore.getURLs();
     if(URLs) {
       const router = this.injector.get(Router);
+      //router.routeReuseStrategy.shouldReuseRoute = ( ) => false; 
       for(let _i in URLs) {
         router.config.push({ path: URLs[_i].url, component: WppageComponent }); 
       }
     }
 
-    /*
-
-    wpcore.getURLs().then((URLs)=>{
-      console.log("all urls in app comp", URLs);
-      
-      
-    });
-    */
     
-    //console.log("term Parents for 100", wpcore.getTermParents(100));
-
-
-     
-     
     
   }
 
-  ulclass = "thisistop";
-
-  items = [
-    {name: 'rroott',link: 'page1', children: [
-      {name: 'a', link: 'page1', children: []}, 
-      {name: 'b', link: 'page2', children: []},
-      {name: 'c', link: 'page1', children: [
-        {name: 'd', link: 'page2', children: []},
-        {name: 'e', link: 'page1', children: []},
-        {name: 'f', link: 'page2', children: []},
-       ]},
-      ]
-    }
-  ];  
-
-
-  OnInit() {
-    
-  }
+  
 }
  
 /*
