@@ -72,6 +72,7 @@ export class WpfcoreService {
     }
 
     var _post_types_to_display = ['page', 'post'];
+    var  _archives = [];
 
     //Generate URL for terms
     if(data.terms) {
@@ -225,21 +226,17 @@ export class WpfcoreService {
           this.URLs.push(_route);
 
           //Create Archive list
+          
           if(data.posts[_p].post_status == "publish" && data.posts[_p].post_type == 'post') {
-            if(_post_year in this.archives) {
-              if(_post_month in this.archives[_post_year]) {
-                this.archives[_post_year][_post_month].push(data.posts[_p].ID);
-              }
-              else {
-                this.archives[_post_year][_post_month] = [data.posts[_p].ID];
-              }
-            } 
-            else {
-              this.archives[_post_year] = [];
+            var _date_key = _post_year + '/' + ("0" + (_post_month + 1)).slice(-2);
+            
+            if(_archives[_date_key]) {
+              _archives[_date_key].push(data.posts[_p].ID);
             }
-          }
-
-
+            else {
+              _archives[_date_key] = [data.posts[_p].ID]; 
+            }
+          } 
         }//END for posts   
       }
 
@@ -271,6 +268,18 @@ export class WpfcoreService {
     };
     this.URLs.push(_search_url); 
 
+    //Push Archives URLs
+    var _search_url = {
+      url: 'date/:year/:month', 
+      component: "WppageComponent",
+      id: 0,
+      entity: 'archive',
+    };
+    this.URLs.push(_search_url); 
+
+
+    this.archives = _archives;
+    
     return data;
   }
 

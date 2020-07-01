@@ -28,6 +28,16 @@
     </ng-container>
   </ng-container>
 </ng-container>
+</div>
+</ng-container>
 
+<ng-container *ngIf="entity_type === 'archives'">
+<div class = "archives-page terms-page">
+<h1 class = "archive-title">Monthly Archives <i>"{{ searchkey }}"</i>.</h1>
+<ng-container *ngIf="content">
+  <ng-container *ngFor="let post_id of content">
+    <wppost [entity_id] = "post_id" link_title = "1" excerpt = "yes"></wppost>    
+  </ng-container>
+</ng-container>
 </div>
 </ng-container>

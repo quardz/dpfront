@@ -18,6 +18,7 @@ import { TwentytwelveComponent } from './core/themes/twentytwelve/twentytwelve.c
 import { WppostComponent } from './core/components/wppost/wppost.component';
 import { WpsearchboxComponent } from './core/components/wpsearchbox/wpsearchbox.component';
 import { Excerpt } from './core/excerpt.filter.pipe';
+import { WparchivesComponent } from './core/components/wparchives/wparchives.component';
  
 export function WpDBProvider(wpcore: WpfcoreService) {
   return () => wpcore.load();
@@ -35,7 +36,8 @@ export function WpDBProvider(wpcore: WpfcoreService) {
     TwentytwelveComponent,
     WppostComponent,
     WpsearchboxComponent,
-    Excerpt
+    Excerpt,
+    WparchivesComponent
   ],
   imports: [
     BrowserModule,

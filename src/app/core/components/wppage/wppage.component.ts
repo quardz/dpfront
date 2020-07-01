@@ -20,6 +20,7 @@ export class WppageComponent implements OnInit {
   issearchpage: boolean = false;
   searchkey: string;
   paramSub: any;
+  archives: any;
 
   constructor(private wpcore: WpfcoreService, private route: ActivatedRoute, private router: Router ,location: Location) { 
 
@@ -27,7 +28,7 @@ export class WppageComponent implements OnInit {
  
     this.currentPage = wpcore.getCurrentpageEntity();
 
- 
+    //For archives pages and search 
     if(!this.currentPage) {
       const key: string = this.route.snapshot.params.key;
       if(this.router.url === ('/search/' + key)) {
@@ -36,11 +37,27 @@ export class WppageComponent implements OnInit {
         this.searchkey = key;
         this.content = wpcore.searchPosts(key);
       }
+
+      const year: string = this.route.snapshot.params.year;
+      const month: string = this.route.snapshot.params.month;
+      const _period = year + '/' + month;;
+      const _cur_url = '/date/' + _period;
+      if(this.router.url === _cur_url) {
+        this.entity_type = 'archives';
+        var _periods = wpcore.getArchives();
+        if(_periods) {
+          this.content = _periods[_period];
+          this.searchkey = _period;
+        }
+      }
     }
+
+    
 
     
     //For terms and post pages
     if(this.currentPage) {
+      console.log("current page is entity page");
       this.entity_id = this.currentPage.id;
       this.entity_type = this.currentPage.entity;
       //Load Post page

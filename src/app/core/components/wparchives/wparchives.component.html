@@ -1,0 +1,12 @@
+<ng-container *ngIf="archives">
+    <ng-container *ngIf="title"><h3 [ngClass] = "titleclass">{{ title }}</h3></ng-container>
+  <ul [ngClass] = "ulClass">
+    <ng-template ngFor let-yearm [ngForOf]="archives | keyvalue">
+      <li [ngClass] = "liClass">
+        <a [routerLink]="yearm.key" [routerLinkActive]="'is-active'">
+          {{ yearm.value }} 
+        </a>
+      </li>    
+    </ng-template> 
+  </ul>
+</ng-container>

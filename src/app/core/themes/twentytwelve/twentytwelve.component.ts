@@ -3,13 +3,14 @@ import { WpfcoreService } from '../../wpfcore.service';
 import { WpnavComponent } from '../../components/wpnav/wpnav.component';
 import { WppageComponent } from '../../components/wppage/wppage.component';
 import { WpcategoryComponent } from '../../components/wpcategory/wpcategory.component';
+import { WparchivesComponent } from '../../components/wparchives/wparchives.component'; 
 
 @Component({
   selector: 'theme-twentytwelve',
   templateUrl: './twentytwelve.component.html',
   styleUrls: ['./twentytwelve.component.scss']
 })
-export class TwentytwelveComponent implements OnInit {
+export class TwentytwelveComponent implements OnInit { 
 
   dbData: any;
 
