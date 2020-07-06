@@ -8,15 +8,13 @@
   width: 100%;
   clear: both;  
 }
-  .mainwrap {
+.mainwrap {
     padding: 0 2.857142857rem;
     margin-bottom: 3.428571429rem;
     box-shadow: 0 2px 6px rgba(100, 100, 100, 0.3);
     background-color: #ffffff;
     padding-bottom: 75px;
-  }    
-
-
+}    
 
 .site-header {
   padding: 1.714285714rem 0;
@@ -38,98 +36,120 @@
     color: #757575;    
   }
 }
-:host ::ng-deep .navbar,
-.navbar {
-  background-color: #ffffff !important;
-  padding: 0px;
-  border-top: 1px solid #ededed;
-  border-bottom: 1px solid #ededed;  
 
-  li {
-    margin: 0 15px 0 0;
-    position: relative;    
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.42857143;   
-    &.dropdown:hover {
-      ul {
-        display: block;
-        margin: 0px;
-        border-color: #e6e6e6;
-      }
-    } 
-    a {
-      border-bottom: 0;
-      color: #6a6a6a important;
-      line-height: 2;
-      text-transform: uppercase;
-      white-space: nowrap;      
-    }
-  }
-  li:first-child {
-    a {
-      padding-left: 0px;
-    }
-  }
-}
-
-:host ::ng-deep .content-wrapper {
-  .page-title {
-    font-size: 32px;
-    font-weight: 400;      
-  }
-  .page-content {
-    font-size: 14px;
-    line-height: 2;    
-  }
-
-}
-
-:host ::ng-deep .archive-title {
-  font-size: 18px;
-  margin-bottom: 45px;  
-}
-
-:host ::ng-deep .terms-page {
-  wppost {
-    display: block;
-    margin-bottom: 60px;
-    .page-title {
-      outline: none;
-      color: #21759b;
-      font-size: 20px;
-    }
-  }
-}
 :host ::ng-deep {
+  .navbar,
+  .navbar {
+    background-color: #ffffff !important;
+    padding: 0px;
+    border-top: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;  
+
+    li {
+      margin: 0 15px 0 0;
+      position: relative;    
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;   
+      &.dropdown:hover {
+        ul {
+          display: block;
+          margin: 0px;
+          border-color: #e6e6e6;
+        }
+      } 
+      a {
+        border-bottom: 0;
+        color: #6a6a6a important;
+        line-height: 2;
+        text-transform: uppercase;
+        white-space: nowrap;      
+      }
+    }
+    li:first-child {
+      a {
+        padding-left: 0px;
+      }
+    }
+  }  
+
+  .content-wrapper {
+    .page-title {
+      font-size: 32px;
+      font-weight: 400;      
+    }
+    .page-content {
+      font-size: 14px;
+      line-height: 2;    
+    }
+  }
+
+  .archive-title {
+    font-size: 18px;
+    margin-bottom: 45px;  
+  }
+
+  .terms-page {
+    wppost {
+      display: block;
+      margin-bottom: 60px;
+      .page-title {
+        outline: none;
+        color: #21759b;
+        font-size: 20px;
+      }
+    }
+  }  
   .page-metadata {
     font-size: 13px;
     font-style: italic; 
     color: #757575;
   }
-
-}
-
-
-:host ::ng-deep .col-sidebar {
-  color: #6a6a6a;
-  .block-title {
-    color: #6a6a6a;
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: uppercase;    
-  }
-  a {
-    color: #757575;
-    outline: none;
-    font-size: 13px;
-    text-decoration: underline;
-    text-transform: capitalize;
-    &:hover {
-      color: #21759b;
+  .post {
+    img {
+      max-width: 100%; 
     }
   }
-  .block {
-    margin-bottom: 30px;
+  .btn-search {
+    background: #e6e6e6;
+    padding: 6px 15px;
+    font-size: 15px;
+    margin-left: 2px;
+    color: #7c7c7c;
+    text-decoration: none;
+    border-radius: 2px;  
+    background-color: #e6e6e6;
+    background-repeat: repeat-x;
+    background-image: -moz-linear-gradient(top, #f4f4f4, #e6e6e6);
+    background-image: -ms-linear-gradient(top, #f4f4f4, #e6e6e6);
+    background-image: -webkit-linear-gradient(top, #f4f4f4, #e6e6e6);
+    background-image: -o-linear-gradient(top, #f4f4f4, #e6e6e6);
+    background-image: linear-gradient(to bottom, #f4f4f4, #e6e6e6);
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(64, 64, 64, 0.1);
+
+  }
+  .col-sidebar {
+    color: #6a6a6a;
+    .block-title {
+      color: #6a6a6a;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;    
+    }
+    a {
+      color: #757575;
+      outline: none;
+      font-size: 13px;
+      text-decoration: underline;
+      text-transform: capitalize;
+      &:hover {
+        color: #21759b;
+      }
+    }
+    .block {
+      margin-bottom: 30px;
+    }
   }
 }

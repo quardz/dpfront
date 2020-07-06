@@ -6,13 +6,13 @@ import { WpcategoryComponent } from '../../components/wpcategory/wpcategory.comp
 import { WparchivesComponent } from '../../components/wparchives/wparchives.component'; 
 
 @Component({
-  selector: 'theme-twentytwelve',
-  templateUrl: './twentytwelve.component.html',
-  styleUrls: ['./twentytwelve.component.scss']
+  selector: 'app-themeauthor',
+  templateUrl: './themeauthor.component.html',
+  styleUrls: ['./themeauthor.component.scss']
 })
-export class TwentytwelveComponent implements OnInit { 
+export class ThemeauthorComponent implements OnInit {
 
-  dbData: any;
+dbData: any;
   loading: boolean = true;
 
   constructor(private wpcore: WpfcoreService) {  
@@ -44,5 +44,4 @@ export class TwentytwelveComponent implements OnInit {
       {name: 'Contact', link: 'contact'},
       {name: 'Goto Google', link: 'https://google.com', ext: true}, 
   ];  
-
 }

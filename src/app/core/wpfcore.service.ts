@@ -12,10 +12,14 @@ import * as JsSearch from 'js-search';
 })
 export class WpfcoreService {
   dbStatus: number;
+  loaded: boolean = false;
   dbData: any;
   URLs: Array<any> = []; //link, component, entity = posts/users, type = post/page, parameters as obj
   mapIndex_Pk: Array<any> = []; // It contains the map between primary key and index
   archives: Array<any> = [];
+  
+  public showSpinner: boolean = false;
+
 
   constructor(private http: HttpClient) { 
     this.dbStatus = 0;
@@ -23,7 +27,11 @@ export class WpfcoreService {
   }
 
   public getData() {  
-    return this.dbData;
+    return this.dbData; 
+  }
+
+  public isLoaded() {
+    return this.loaded;
   }
 
   public getURLs() {
@@ -38,9 +46,20 @@ export class WpfcoreService {
     return this.archives;
   }
 
+  showLoadingSpinner() {
+    this.showSpinner = true;
+  }
+
+  hideLoadingSpinner() {
+    this.showSpinner = false;
+  }
+
+
   //load the json data from server
   load() {
     return new Promise((resolve, reject) => {
+      this.showLoadingSpinner();
+
       this.http
         .get('/db.json')
         .subscribe(response => {
@@ -48,6 +67,9 @@ export class WpfcoreService {
           this.dbData = this.fixData(response);
           console.log("after loading and fixing", this.dbData);
           this.dbStatus = 1;
+          this.loaded = true;
+          this.hideLoadingSpinner();
+
           resolve(true);
       })
     })
@@ -74,6 +96,9 @@ export class WpfcoreService {
     var _post_types_to_display = ['page', 'post'];
     var  _archives = [];
 
+    var _url_category_base = this.getOption('category_base', 'category');
+    var _url_tag_base = this.getOption('tag_base', 'tag');    
+
     //Generate URL for terms
     if(data.terms) {
       for(let _t in data.terms) {
@@ -84,7 +109,13 @@ export class WpfcoreService {
               _path =  data.terms[data.terms[_t][10][_pid]][2] + "/" + _path;
             }
           }
-          _path = data.terms[_t][6] + "/" + _path  + data.terms[_t][2];          
+          if(data.terms[_t][6] == 'category') {
+            _path = _url_category_base + "/" + _path  + data.terms[_t][2];            
+          }
+          if(data.terms[_t][6] == 'post_tag') {
+            _path = _url_tag_base + "/" + _path  + data.terms[_t][2];            
+          }
+          
         }
         data.terms[_t][12] = _path.replace(/\/$/, "").replace(/^\/+/, '');
         //data.terms[_t][12] = "/" +  _path
@@ -345,45 +376,10 @@ export class WpfcoreService {
           }
         } 
       }
-      if(data.terms) {
-        //data.terms = this.fixTerms(data.terms);
-      }
       return data;
     }
   }
-
-  //Fix terms URLs, @todo this is moved to main 
-  private fixTerms(terms: any){
-    var prefix = '';
-    var category_base = this.getOption('category_base', 'category');
-    var tag_base = this.getOption('tag_base', 'tag');
-    if(terms) {
-      for(let _t in terms) {
-        var _tmp_url = '';
-        if(terms[_t].taxonomy == "category" || terms[_t].taxonomy == "post_tag") {
-          switch(terms[_t].taxonomy) {
-            case "category":
-              _tmp_url = _tmp_url + category_base + '/';
-            break;
-            case "post_tag":
-              _tmp_url = _tmp_url + tag_base + '/';
-            break;
-          }
-          if(terms[_t].parent) {
-
-          }
-          else {
-            _tmp_url = _tmp_url + terms[_t].slug;
-          }
-        }
-        terms[_t].url = _tmp_url;
-      }
-      return terms;
-    }
-    //for each term get parent 
-  }
-
-   
+ 
 
 
   getOption(option_id: number|string, _default = '') { 
@@ -432,18 +428,34 @@ export class WpfcoreService {
 
   //Get recent posts
   public getRecentPosts(limit = 5, post_type = "post") {
+    if(this.dbData.posts) {
+      var posts = [];
+      for(let _index in this.dbData.posts) {
+        if(this.dbData.posts[_index].post_type == post_type && this.dbData.posts[_index].post_status == "publish") {
+          posts.push(this.dbData.posts[_index].ID);
+        }
+      }
+      var recent_posts = posts.sort((a,b) => b-a);
+      if(recent_posts) {
+        return recent_posts;
+      }
+    }
+    return false;
+  }
 
-    var filters: Array<any> = [
-      ["post_type","=",post_type],
-      "AND",
-      ["post_status","=","publish"]
-    ];
-    var orderBy: Array<any> = ['post_modified DESC'];
-    return this.loadEntity('posts', filters, orderBy, limit).then((rows)=>{
-      return rows;
-    }).catch((error) => {
-      
-    });
+  //Get the current theme regions
+  getRegions(theme?: string) {
+
+  }
+
+  //Get widgets for given theme
+  getWidgets(theme?: string) {
+
+  }
+
+  //Get default theme
+  getTheme() {
+
   }
 
   getCategory(taxanomy: string = 'category') {

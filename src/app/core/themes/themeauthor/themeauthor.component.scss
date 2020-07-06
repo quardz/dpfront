@@ -1,0 +1,44 @@
+.main-sidebar {
+  background: #27292B;
+  color: white;    
+  min-height: 100%;
+  a {
+    color: #ffffff;
+  }
+}
+
+.main {
+  background: #F0F1F2;    
+}
+
+.themebody {
+  min-height: 700px;
+}
+.title-container {
+  float: none;
+  height: auto;
+  text-align: center;
+  padding-bottom: 0.75em;
+}
+.site-title {
+  font-size: 1.75em;
+  line-height: 1;
+
+}
+.tagline {
+  display: block;
+  color: #CCCCCC;
+  margin: 0;  
+}
+
+:host ::ng-deep {
+  body {
+    font-size: 100%;
+    font-family: "Lato", sans-serif;
+    background: #27292B;
+    color: #27292B;
+    -webkit-font-smoothing: subpixel-antialiased;
+    word-wrap: break-word;
+    -ms-word-wrap: break-word;    
+  }
+}

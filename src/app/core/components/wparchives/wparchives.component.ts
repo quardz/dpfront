@@ -20,16 +20,14 @@ export class WparchivesComponent implements OnInit {
 
   ngOnInit(): void {
     var _archives = this.wpcore.getArchives();
-    console.log("archives loaded", _archives);
     
     if(_archives) {
       this.archives = {};
       var months = ['Jan', 'Feb', 'March', 'April', 'May', "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
       for(let _url in _archives) {
         var _mon: any = _url.split('/').pop();
-        console.log("mong", _mon);
         if(_mon) {
-          _mon = parseInt(_mon);
+          _mon = parseInt(_mon) - 1;
           var _url2 = "date/" + _url;
           
           this.archives[_url2] = _url.split('/').shift() + " " + months[_mon];

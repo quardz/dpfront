@@ -1,3 +1,8 @@
-<theme-twentytwelve>
-  
-</theme-twentytwelve>
+<div *ngIf="loading else loaded">
+    loading ...
+</div>
+
+<ng-template #loaded>
+  <ndc-dynamic [ndcDynamicComponent]="wptheme"></ndc-dynamic>
+</ng-template>
+

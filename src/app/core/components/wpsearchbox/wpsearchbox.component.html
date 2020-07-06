@@ -1,4 +1,3 @@
-<form #searchform = "ngForm" (ngSubmit) = "onClickSubmit(searchform.value)" >
-  <input type = "text" name = "key" placeholder = "Enter Keyword...." ngModel>
-  <input type = "submit" value = "Search">
-</form>
+  <input type = "text" [(ngModel)] ='key' placeholder = "Enter Keyword....">
+  
+  <a [routerLink]="'search/' + key" class = "btn-search">Search</a>

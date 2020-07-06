@@ -18,6 +18,23 @@
 	RewriteRule ^(.*) index.html [NC,L]
 </IfModule>
 
+<IfModule mod_filter.c>
+    AddOutputFilterByType DEFLATE "application/atom+xml" \
+                                  "application/javascript" \
+                                  "application/json" \
+                                  "application/ld+json" \
+                                  "application/manifest+json"
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault                                      "access plus 0 seconds"
+    ExpiresByType application/json                      "access plus 100 hours"
+    ExpiresByType text/html                             "access plus 0 seconds"
+    ExpiresByType text/javascript                       "access plus 0 seconds"
+</IfModule>
+
+
 #------------ BROWSER CACHING (optional)
 # Disable browser caching in production. You can add/remove file extension as you wish.
 #<FilesMatch "\.(html|htm|js|json|css)$">
