@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { WpfcoreService } from '../../wpfcore.service';
 import { WpnavComponent } from '../../components/wpnav/wpnav.component';
 import { WppageComponent } from '../../components/wppage/wppage.component';
@@ -10,21 +10,32 @@ import { WparchivesComponent } from '../../components/wparchives/wparchives.comp
   templateUrl: './themeauthor.component.html',
   styleUrls: ['./themeauthor.component.scss']
 })
+
+@HostListener('window:resize', ['$event'])
+
+
 export class ThemeauthorComponent implements OnInit {
 
-dbData: any;
+  dbData: any;
   loading: boolean = true;
+  public innerHeight: any = 500;
+
 
   constructor(private wpcore: WpfcoreService) {  
     this.dbData = wpcore.getData();
     this.loading = wpcore.showSpinner;
   }
 
+  onResize(event) {
+    this.innerHeight = window.innerHeight;
+    console.log("inner height on resize", this.innerHeight);
+  }
+
   
  
   ngOnInit(): void {
-
-
+    this.innerHeight = window.innerHeight;
+    console.log("inner height", this.innerHeight);
   }
 
   items = [

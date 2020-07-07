@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, Injector } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import * as _ from 'underscore';
 import { nSQL } from "@nano-sql/core";
@@ -17,6 +17,8 @@ export class WpfcoreService {
   URLs: Array<any> = []; //link, component, entity = posts/users, type = post/page, parameters as obj
   mapIndex_Pk: Array<any> = []; // It contains the map between primary key and index
   archives: Array<any> = [];
+  themes: any = {};
+  currenttheme: Subject<string>;
   
   public showSpinner: boolean = false;
 
@@ -24,7 +26,31 @@ export class WpfcoreService {
   constructor(private http: HttpClient) { 
     this.dbStatus = 0;
     this.dbData = null;
+
+    var _theme = 'TwentytwelveComponent';
+ 
+    this.currenttheme = new Subject<any>();//.asObservable(); 
+    
+    this.currenttheme.next('TwentytwelveComponent');
+
+    this.themes = {
+      TwentytwelveComponent: 'Twenty Twelve', 
+      ThemeauthorComponent: 'Author',
+    };
+
   }
+
+  public getThemes() { 
+    return this.themes;
+  }
+
+  public setTheme(theme) {
+    this.currenttheme.next(theme);
+  }
+
+  public getTheme() {
+    return this.currenttheme;
+  }  
 
   public getData() {  
     return this.dbData; 
@@ -453,10 +479,6 @@ export class WpfcoreService {
 
   }
 
-  //Get default theme
-  getTheme() {
-
-  }
 
   getCategory(taxanomy: string = 'category') {
     var output = [];

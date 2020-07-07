@@ -6,6 +6,7 @@ import { DynamicModule } from 'ng-dynamic-component';
 import { WpfcoreService } from './core/wpfcore.service';
 import { WpnavComponent } from './core/components/wpnav/wpnav.component';
 import { WppageComponent } from './core/components/wppage/wppage.component';
+import { WpwidgetsComponent, WpThemeSwitchComponent } from './core/components/wpwidgets/wpwidgets.component';
 import { WpcategoryComponent } from './core/components/wpcategory/wpcategory.component';
 import { WpsearchboxComponent } from './core/components/wpsearchbox/wpsearchbox.component';
 import { TwentytwelveComponent } from './core/themes/twentytwelve/twentytwelve.component';
@@ -31,12 +32,20 @@ export class AppComponent {
   themename: string;
   wptheme: any;
   loading: boolean = true;
+  themeMap: any = {};
 
   constructor(
       private wpcore: WpfcoreService, 
       private injector: Injector,
       private route: ActivatedRoute,
     ) {  
+
+
+    //
+    this.themeMap = {
+      TwentytwelveComponent: TwentytwelveComponent, 
+      ThemeauthorComponent: ThemeauthorComponent,
+    };    
     
     this.dbData = wpcore.getData();
     if(this.dbData) {
@@ -48,9 +57,18 @@ export class AppComponent {
     //change this based on conditions later
     this.wptheme = TwentytwelveComponent; //ThemeauthorComponent;//
 
-    
+    var allthemes = wpcore.getThemes();
 
-    URLs = wpcore.getURLs();
+    this.wpcore.currenttheme.subscribe((theme: any) => { 
+      if(theme && this.themeMap[theme]) {
+        this.wptheme = this.themeMap[theme]          
+      }
+      console.log("switching theme wiht subject", theme);
+    });
+
+
+
+    URLs = wpcore.getURLs(); 
     if(URLs) {
       this.router = this.injector.get(Router);
       //router.routeReuseStrategy.shouldReuseRoute = ( ) => false; 
@@ -58,12 +76,15 @@ export class AppComponent {
         this.router.config.push({ path: URLs[_i].url, component: WppageComponent }); 
       }
     }   
-    //testing 
-    console.log("loading oninit", this.route.url);  
 
-
-    //testing ends    
   }
+
+  //Set the theme
+  setTheme(theme: any = TwentytwelveComponent) {
+    this.wptheme = theme;
+    console.log("Switching theme");
+  }
+
 
   OnInit() {
 
@@ -71,8 +92,6 @@ export class AppComponent {
     this.router.routeReuseStrategy.shouldReuseRoute = function(){ 
       return false;
     };
-
-
 
     this.route.paramMap.subscribe(params => {
       this.themename = params.get('themename');
@@ -84,8 +103,6 @@ export class AppComponent {
       console.log("testing params", params);
       // more stuff
     });
-
-
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
         this.router.navigated = false;

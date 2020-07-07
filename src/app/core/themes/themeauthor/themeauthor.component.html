@@ -1,15 +1,43 @@
 <div class = "themebody row">
 
 <div id="main-sidebar" class="main-sidebar col-sm-3">
+  <div class = "sidebar-inner" [ngStyle]="{'height': innerHeight+'px'}">
   <div id="title-container" class="title-container">
     <div id="site-title" class="site-title">
       <a [routerLink] = "'/'">{{dbData.options.blogname}}</a>
     </div>               
     <p class="tagline">{{dbData.options.blogdescription}}</p>              
   </div>  
+
+  <div class = "widgets">
+
+      <div class = "row block">
+        <wpsearchbox></wpsearchbox>
+      </div>
+
+      <div class = "row block">
+        <wp-themeswitch></wp-themeswitch>
+      </div>
+      
+      <div class = "row block">
+        <app-wpcategory title = "Cateogries" taxonomy = "category"></app-wpcategory>
+      </div>
+      <div class = "row block">
+        <app-wpcategory title = "Tags" taxonomy = "post_tag"></app-wpcategory>
+      </div>   
+      <div class = "row block block-wparchives">
+        <wparchives></wparchives> 
+      </div>            
+  </div>
+</div>
 </div>
 
 <section id="main" class="main col-sm-9" role="main">
+      <div class="content-wrapper">
+        <div class = "content-wrapper-inner">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
 
 </section>
 </div>

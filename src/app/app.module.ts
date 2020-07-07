@@ -20,6 +20,7 @@ import { WpsearchboxComponent } from './core/components/wpsearchbox/wpsearchbox.
 import { Excerpt } from './core/excerpt.filter.pipe';
 import { WparchivesComponent } from './core/components/wparchives/wparchives.component';
 import { ThemeauthorComponent } from './core/themes/themeauthor/themeauthor.component';
+import { WpwidgetsComponent, WpThemeSwitchComponent } from './core/components/wpwidgets/wpwidgets.component';
  
 export function WpDBProvider(wpcore: WpfcoreService) {
   return () => wpcore.load();
@@ -37,7 +38,9 @@ export function WpDBProvider(wpcore: WpfcoreService) {
     WpsearchboxComponent,
     Excerpt,
     WparchivesComponent,
-    ThemeauthorComponent
+    ThemeauthorComponent,
+    WpwidgetsComponent,
+    WpThemeSwitchComponent
   ],
   imports: [
     BrowserModule,
