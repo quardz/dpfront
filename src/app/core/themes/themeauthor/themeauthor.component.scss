@@ -47,10 +47,10 @@
   padding: 3em 6% 3em 6%;
 }
 .content-wrapper-inner {
-  padding: 1.5em 6.66%;
-  display: block;
-  background: #ffffff;  
+  
 }
+
+
 :host ::ng-deep {
   body {
     font-size: 100%;
@@ -102,5 +102,25 @@
     margin-top: 7px;
     border-radius: 3px;
   }
-
+  .archive-title {
+    padding: 1.5em 6.66%;
+    display: block;
+    background: #ffffff;    
+    margin-bottom: 30px;
+    text-align: center;  
+    font-size: 18px;
+    color: #27292B;    
+  }  
+  wppost {
+    padding: 30px;
+    display: block;
+    background: #ffffff;
+    margin-bottom: 30px;    
+  }
+  .page-title {
+    a{
+      color: #27292B;
+      text-decoration: none;
+    }
+  }
 }
