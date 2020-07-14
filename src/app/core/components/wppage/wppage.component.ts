@@ -12,13 +12,13 @@ import { WppostComponent } from '../wppost/wppost.component'
 export class WppageComponent implements OnInit { 
 
   entity_type: string;
-  entity_id: number;
+  entity_id: any;
   content: any;
   currentPage: any;
   mapIndex_Pk: Array<any> = [];
   entity: any;
   issearchpage: boolean = false;
-  searchkey: string;
+  searchkey: any;
   paramSub: any;
   archives: any;
 
@@ -37,19 +37,20 @@ export class WppageComponent implements OnInit {
         this.searchkey = key;
         this.content = wpcore.searchPosts(key);
       }
-
+      /*
       const year: string = this.route.snapshot.params.year;
       const month: string = this.route.snapshot.params.month;
       const _period = year + '/' + month;;
       const _cur_url = '/date/' + _period;
       if(this.router.url === _cur_url) {
-        this.entity_type = 'archives';
+        this.entity_type = 'archive';
         var _periods = wpcore.getArchives();
         if(_periods) {
           this.content = _periods[_period];
           this.searchkey = _period;
         }
       }
+      */
     }
 
     
@@ -68,6 +69,19 @@ export class WppageComponent implements OnInit {
       if(this.entity_type == 'terms') {
         this.content = wpcore.getTerm(this.entity_id);
       }
+
+      //For archives
+      if(this.entity_type == 'archive') {
+        var _date = this.currentPage.id.split("/");
+        var _periods = wpcore.getArchives();
+        if(_periods) {
+          this.content = _periods[this.entity_id];
+          this.searchkey = this.entity_id;
+        }
+        console.log("current page is archive page", this.content, this.entity_id, this.entity_type, this.currentPage);
+
+      }
+
     }    
 
     //for Search pages

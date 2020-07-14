@@ -1,6 +1,6 @@
 <div class="form-group">
   <label for="power">Select Theme</label>
-  <select class="form-control" #mySelect id="power" (change)='onthemeselect(mySelect.value)'>
+  <select class="form-control" #mySelect id="power" (change)='onthemeselect(mySelect.value)' [(ngModel)] = "theme">
     <option *ngFor="let theme of themes | keyvalue" [value]="theme.key">{{theme.value}}</option>
   </select>
 </div> 

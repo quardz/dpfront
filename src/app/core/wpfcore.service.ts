@@ -326,17 +326,28 @@ export class WpfcoreService {
     this.URLs.push(_search_url); 
 
     //Push Archives URLs
+    /*
     var _search_url = {
       url: 'date/:year/:month', 
       component: "WppageComponent",
       id: 0,
       entity: 'archive',
     };
-    this.URLs.push(_search_url); 
-
+    this.URLs.push(_search_url);  
+    */
 
     this.archives = _archives;
-    
+    if(_archives) {
+      for(let _date in _archives) {
+        this.URLs.push({
+          url: 'date/' + _date, 
+          component: "WppageComponent",
+          id: _date,
+          entity: 'archive',
+        });
+      }
+    }
+
     return data;
   }
 

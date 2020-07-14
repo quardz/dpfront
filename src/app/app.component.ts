@@ -65,6 +65,7 @@ export class AppComponent {
       }
       console.log("switching theme wiht subject", theme);
     });
+    
 
 
 

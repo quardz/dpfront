@@ -18,7 +18,7 @@ export class WpwidgetsComponent implements OnInit {
 }
 
 
-@Component({
+@Component({ 
   selector: 'wp-themeswitch',
   templateUrl: './themeswitch.component.html',
   styleUrls: ['./themeswitch.component.scss']
@@ -26,7 +26,7 @@ export class WpwidgetsComponent implements OnInit {
 export class WpThemeSwitchComponent implements OnInit {
 
   themes: any;
-  theme: any;
+  theme: any = 'TwentytwelveComponent';
   theme_display_name: string;
 
   constructor(
@@ -40,6 +40,7 @@ export class WpThemeSwitchComponent implements OnInit {
   onthemeselect(theme: any) {
     console.log("selected theme in onthemeselect", theme);
     this.wpcore.setTheme(theme);
+    this.theme = theme;
   }
 
   ngOnInit(): void {
